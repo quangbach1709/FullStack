@@ -1,4 +1,7 @@
 <?php
+
+require_once "randomString.php";//goi file function.php vao de su dung ham randomString
+
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=products_curd', 'root', '');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -17,7 +20,7 @@ try {
 //    var_dump($_FILES);
 //    echo "</pre>";
 
-    $errors = [];
+
     //add data to database
     $title = '';
     $description = '';
@@ -65,17 +68,6 @@ try {
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
-function randomString($n): string
-{
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $str = '';
-    for ($i = 0; $i < $n; $i++) {
-        $index = rand(0, strlen($characters) - 1);//rand dung de sinh so ngau nhien trong khoang tu 0 den do dai cua chuoi
-        $str .= $characters[$index];//lay ra ky tu tai vi tri index trong chuoi characters
-    }
-    return $str;
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -96,7 +88,8 @@ function randomString($n): string
 
 <p>
     <!-- Button trigger modal -->
-    <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Create</a>
+    <a type="button" class="btn btn-primary" id="create" data-bs-toggle="modal"
+       data-bs-target="#exampleModal">Create</a>
 </p>
 
 
@@ -116,6 +109,8 @@ function randomString($n): string
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
+                <!--                --><?php //if ():?>
+                <!--                --><?php //endif; ?>
                 <div class="form-group">
                     <laber>Product Img</laber>
                     <br>
@@ -151,14 +146,16 @@ function randomString($n): string
         <th scope="col">#</th>
         <th scope="col">Image</th>
         <th scope="col">Title</th>
-        <th scope="col">price</th>
+        <th scope="col">Price</th>
         <th scope="col">Create Date</th>
         <th scope="col">Action</th>
     </tr>
     </thead>
     <tbody>
     <?php
-    foreach ($products as $i => $product) : ?>
+    foreach ($products
+
+             as $i => $product) : ?>
         <tr>
             <th scope="col"><?php echo $i + 1 ?></th>
             <td>
@@ -168,7 +165,8 @@ function randomString($n): string
             <td><?php echo $product['price'] ?></td>
             <td><?php echo $product['create_date'] ?></td>
             <td>
-                <button type="button" class="btn btn-sm btn-primary">Edit</button>
+                <a href="edit.php?id=<?php echo $product['id'] ?>" class="btn btn-sm btn-primary">Edit</a>
+
                 <form style="display: inline-block" action="del.php" method="post">
                     <input type="hidden" name="id" value="<?php echo $product['id'] ?>">
                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
@@ -182,6 +180,7 @@ function randomString($n): string
     </tbody>
 
 </table>
+<!-- Optional JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
