@@ -5,7 +5,14 @@ require_once "randomString.php";//goi file function.php vao de su dung ham rando
 try {
     $pdo = new PDO('mysql:host=localhost;dbname=products_curd', 'root', '');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $statement = $pdo->prepare('SELECT * FROM products ORDER BY create_date DESC');
+
+    $search = $_GET['search'] ?? '';
+    if ($search) {
+        $statement = $pdo->prepare('SELECT * FROM products WHERE title LIKE :title ORDER BY create_date DESC');
+        $statement->bindValue(':title', "%$search%");//
+    } else
+        $statement = $pdo->prepare('SELECT * FROM products ORDER BY create_date DESC');
+
     $statement->execute();
     $products = $statement->fetchAll(PDO::FETCH_ASSOC);//dung de lay tat ca cac ban ghi trong bang
 //    echo '<pre>';
@@ -140,6 +147,14 @@ try {
         </form>
     </div>
 </div>
+
+<form class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Search for products" name="search"
+           aria-label="Recipient's username"
+           aria-describedby="button-addon2" value="<?php echo $search ?>">
+    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+</form>
+
 <table class="table">
     <thead>
     <tr>

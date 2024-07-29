@@ -45,11 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image = $_FILES['image'] ?? null;
         $imagePath = $product['image'];
 
-        if ($product['image']) {
-            unlink($product['image']);//xoa anh cu di khi update anh moi
-        }
 
         if ($image && $image['tmp_name']) {
+            if ($product['image']) {
+                unlink($product['image']);//xoa anh cu di khi update anh moi
+            }
             $imagePath = 'images/' . randomString(8) . '/' . $image['name'];
             mkdir(dirname($imagePath));
             move_uploaded_file($image['tmp_name'], $imagePath);
